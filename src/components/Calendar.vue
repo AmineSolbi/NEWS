@@ -1,9 +1,9 @@
 <template>
     <div
-        class="w-[843px] h-[120px] bg-[#053B50] mt-[50px] ml-[12px] rounded-lg text-center text-[20px] text-white drop-shadow-[4px_4px_rgba(5,59,80,0.2)]">
-        <p class="pt-[8px]">Voulliez selectione une date </p>
+        class="w-96 bg-lime-950 mt-5 text-center text-white text-lg border-2">
+        <p class="pt-2">Veuillez selectioner une date </p>
         <VueDatePicker class="p-5" v-model="date" range :preset-dates="presetDates"
-            placeholder="Voulliez selectione une date">
+            placeholder="Veuillez selectioner une date">
             <template #preset-date-range-button="{ label, value, presetDate }">
                 <span role="button" :tabindex="0" @click="presetDate(value)" @keyup.enter.prevent="presetDate(value)"
                     @keyup.space.prevent="presetDate(value)">
@@ -16,23 +16,17 @@
 
 <script setup>
 import { ref } from 'vue';
-import { endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths } from 'date-fns';
+import { endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, startOfWeek, endOfWeek } from 'date-fns';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 const date = ref();
 
 const presetDates = ref([
-    { label: 'Today', value: [new Date(), new Date()] },
+    { label: "Aujourd'hui", value: [new Date(), new Date()] },
     {
-        label: 'Today (Slot)',
-        value: [new Date(), new Date()],
-        slot: 'preset-date-range-button'
+        label: 'Cette semaine',
+        value:  [startOfWeek(new Date()), endOfWeek(new Date())]
     },
-    { label: 'This month', value: [startOfMonth(new Date()), endOfMonth(new Date())] },
-    {
-        label: 'Last month',
-        value: [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))],
-    },
-    { label: 'This year', value: [startOfYear(new Date()), endOfYear(new Date())] },
+    { label: 'Ce mois-ci', value: [startOfMonth(new Date()), endOfMonth(new Date())] }
 ]);
 </script>

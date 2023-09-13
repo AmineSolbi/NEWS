@@ -4,8 +4,8 @@
         <router-link to="/" class="font-semibold basis-1/3 text-center mt-[3%] phone:mt-4">All</router-link>
         <p class="font-semibold basis-1/3 text-center mt-[3%] phone:mt-4 hover:hidden opacity-60">Media</p>
         <div class="bg-[#EBEBEB] w-[150px] h-[48px] rounded-full mt-[9px] mr-5 hover:w-[350px] duration-300 inline-flex"
-            @mouseover="showSettingsLogout" @mouseout="hideSettingsLogout">
-            <p class="font-semibold text-center mt-2 ml-6" :class="{ 'hidden': isHovered, 'duration-300': !isHovered }">
+            >
+            <p @mouseover="showSettingsLogout" @mouseout="hideSettingsLogout" class="font-semibold text-center mt-2 ml-6">
                 User
             </p>
             <p class="font-semibold text-center mt-2 ml-6" :class="{ 'hidden': !isHovered, 'duration-300': isHovered }">
@@ -14,7 +14,7 @@
             <p class="font-semibold text-center mt-2 ml-6" :class="{ 'hidden': !isHovered, 'duration-300': isHovered }">
                 Logout
             </p>
-            <img :src="Avatare" class="absolute h-[48px] inset-y-0 right-5 top-[.8rem]" />
+            <img :src="Avatare" class="h-[48px] inset-y-0 right-5 top-[.8rem]" />
         </div>
     </div>
 </template>

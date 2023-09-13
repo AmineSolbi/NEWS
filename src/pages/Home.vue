@@ -1,8 +1,9 @@
 <template>
     <div>
         <Navbar />
-        <Calendar />
-        <main class="border-2 ml-[12px] mt-[50px] rounded-lg p-5 w-[1817px]">
+        <div class="items-center w-full"><Calendar /></div>
+        
+        <main class="mt-12 p-5 w-full">
             <!-- Tabs section -->
             <div class="px-4 md:px-8">
                 <ul role="tablist"
@@ -25,24 +26,25 @@
                 <table class="w-full table-auto text-sm text-left phone:w-full">
                     <thead class="bg-gray-50 text-gray-600 font-medium border-b">
                         <tr class="text-center">
+                            <th class="py-3 px-6">Sentiment</th>
                             <th class="py-3 px-6">Titre de l'article</th>
                             <th class="py-3 px-6">Source</th>
-                            <th class="py-3 px-6">Sentiment</th>
                         </tr>
                     </thead>
                     <tbody class="text-gray-600 divide-y divide-gray-200 justify-self-start">
                         <tr v-for="(item, index) in filteredData" :key="item.id"
                             :class="{ 'bg-gray-100': index % 2 === 0 }">
+
+                            <td class="text-center">
+                                <div class="flex justify-center items-center">
+                                    <img :src="item.sentiment" :alt="item.sentiment" />
+                                </div>
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ item.titre }}</td>
                             <td class="text-center phone:text-left"> <!-- Adjust alignment for mobile -->
                                 <div class="flex justify-center items-center">
                                     {{ item.source[0].nom }}
                                     <img :src="item.source[0].image" class="ml-3 -mt-1" />
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                <div class="flex justify-center items-center">
-                                    <img :src="item.sentiment" :alt="item.sentiment" />
                                 </div>
                             </td>
                         </tr>
