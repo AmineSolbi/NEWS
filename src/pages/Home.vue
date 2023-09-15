@@ -1,8 +1,10 @@
 <template>
-    <div>
+    <div class="min-h-screen flex flex-col">
         <Navbar />
-        <div class="items-center w-full"><Calendar /></div>
-        
+        <div class="items-center w-full">
+            <Calendar />
+        </div>
+
         <main class="mt-12 p-5 w-full">
             <!-- Tabs section -->
             <div class="px-4 md:px-8">
@@ -52,7 +54,7 @@
                 </table>
             </div>
         </main>
-        <footer class="bg-[#053B50] h-[107px] w-full mt-[6.6%] fixed">
+        <footer class="bg-[#053B50] h-[107px] w-full mt-auto">
             <p class="text-[#D0D1D3] p-10">Copyright © 1995-2023 eBay Inc. All Rights Reserved. Accessibility, User
                 Agreement,
                 Privacy, Payments Terms

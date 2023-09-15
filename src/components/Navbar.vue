@@ -1,35 +1,83 @@
 <template>
-    <div
-        class="flex flex-1 gap-3 text-[20px] text-black bg-[#D8D8D8] drop-shadow-[4px_4px_rgba(217,217,217,0.25)] h-[67px] w-[542px] laptop:rounded-br-[20px] phone:border-br-none">
-        <router-link to="/" class="font-semibold basis-1/3 text-center mt-[3%] phone:mt-4">All</router-link>
-        <p class="font-semibold basis-1/3 text-center mt-[3%] phone:mt-4 hover:hidden opacity-60">Media</p>
-        <div class="bg-[#EBEBEB] w-[150px] h-[48px] rounded-full mt-[9px] mr-5 hover:w-[350px] duration-300 inline-flex"
-            @mouseover="showSettingsLogout" @mouseout="hideSettingsLogout">
-            <p class="font-semibold text-center mt-2 ml-6" :class="{ 'hidden': isHovered, 'duration-300': !isHovered }">
-                User
-            </p>
-            <p class="font-semibold text-center mt-2 ml-6" :class="{ 'hidden': !isHovered, 'duration-300': isHovered }">
-                Settings
-            </p>
-            <p class="font-semibold text-center mt-2 ml-6" :class="{ 'hidden': !isHovered, 'duration-300': isHovered }">
-                Logout
-            </p>
-            <img :src="Avatare" class="absolute h-[48px] inset-y-0 right-5 top-[.8rem]" />
+    <Disclosure as="nav" class="bg-[#D8D8D8] w-[542px] rounded-br-[20px] shadow-[0_10px_5px_rgba(217,217,217,0.25)]"
+        v-slot="{ open }">
+        <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div class="relative flex h-16 items-center justify-between">
+                <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+                    <!-- Mobile menu button-->
+                    <DisclosureButton
+                        class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                        <span class="absolute -inset-0.5" />
+                        <span class="sr-only">Open main menu</span>
+                        <Bars3Icon v-if="!open" class="block h-6 w-6" aria-hidden="true" />
+                        <XMarkIcon v-else class="block h-6 w-6" aria-hidden="true" />
+                    </DisclosureButton>
+                </div>
+                <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+                    <div class="hidden sm:ml-6 sm:block">
+                        <div class="flex space-x-4">
+                            <a v-for="item in navigation" :key="item.name" :href="item.href"
+                                :class="[item.current ? 'bg-[#afaeae] text-white' : 'text-gray-300 hover:bg-[#afaeae] hover:text-black', 'rounded-md px-3 py-2 text-sm font-medium text-black']"
+                                :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                    <Menu as="div" class="relative ml-3">
+                        <div>
+                            <MenuButton
+                                class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                <span class="absolute -inset-1.5" />
+                                <span class="sr-only">Open user menu</span>
+                                <img class="h-8 w-8 rounded-full"
+                                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                    alt="" />
+                            </MenuButton>
+                        </div>
+                        <transition enter-active-class="transition ease-out duration-100"
+                            enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+                            leave-active-class="transition ease-in duration-75"
+                            leave-from-class="transform opacity-100 scale-100"
+                            leave-to-class="transform opacity-0 scale-95">
+                            <MenuItems
+                                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <MenuItem v-slot="{ active }">
+                                <a href="#"
+                                    :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Your
+                                    Profile</a>
+                                </MenuItem>
+                                <MenuItem v-slot="{ active }">
+                                <a href="#"
+                                    :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Settings</a>
+                                </MenuItem>
+                                <MenuItem v-slot="{ active }">
+                                <a href="#"
+                                    :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign
+                                    out</a>
+                                </MenuItem>
+                            </MenuItems>
+                        </transition>
+                    </Menu>
+                </div>
+            </div>
         </div>
-    </div>
+
+        <DisclosurePanel class="sm:hidden">
+            <div class="space-y-1 px-2 pb-3 pt-2">
+                <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href"
+                    :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium text-black']"
+                    :aria-current="item.current ? 'page' : undefined">{{ item.name }}</DisclosureButton>
+            </div>
+        </DisclosurePanel>
+    </Disclosure>
 </template>
 
 <script setup>
-import Avatare from "../image/Ellipse 2.png";
-import { ref } from "vue";
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
-const isHovered = ref(false);
-
-const showSettingsLogout = () => {
-    isHovered.value = true;
-};
-
-const hideSettingsLogout = () => {
-    isHovered.value = false;
-};
+const navigation = [
+    { name: 'All', href: '#', current: true },
+    { name: 'Media', href: '#', current: false },
+]
 </script>
