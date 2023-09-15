@@ -8,6 +8,9 @@ module.exports = {
     extend: {},
     screens: {
       'phone':{'max': '425px'},
+      'sm': '576px',
+      'md': '960px',
+      'lg': '1440px',
     },
   },
   plugins: [],
