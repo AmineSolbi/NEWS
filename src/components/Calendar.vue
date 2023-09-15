@@ -1,5 +1,5 @@
 <template>
-    <div class="w-96 bg-lime-950 mt-5 text-center text-white text-lg border-2 rounded-lg">
+    <div class="w-96 bg-lime-950 mt-5 text-center text-white text-lg border-2 rounded-lg phone:ml-5">
         <p class="pt-2">Veuillez selectioner une date </p>
         <VueDatePicker class="p-5" v-model="date" range :preset-dates="presetDates"
             placeholder="Veuillez selectioner une date">

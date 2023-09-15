@@ -54,7 +54,7 @@
                 </table>
             </div>
         </main>
-        <footer class="bg-[#053B50] h-[107px] w-full mt-auto">
+        <footer class="bg-[#053B50] mt-auto">
             <p class="text-[#D0D1D3] p-10">Copyright © 1995-2023 eBay Inc. All Rights Reserved. Accessibility, User
                 Agreement,
                 Privacy, Payments Terms
