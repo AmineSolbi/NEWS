@@ -25,6 +25,9 @@
 
             <!-- Table section -->
             <div class="mt-12 shadow-sm border rounded-lg overflow-x-auto">
+                <div v-if="filteredData.length === 0" class="text-center mt-4 pb-5 font-bold text-red-500">
+                    <p>Il n'y a pas d'articles concernant cette date {{ datefetch }}</p>
+                </div>
                 <table class="w-full table-auto text-sm text-left phone:w-full">
                     <thead class="bg-gray-50 text-gray-600 font-medium border-b">
                         <tr class="text-center">
@@ -33,7 +36,9 @@
                             <th class="py-3 px-6">Source</th>
                         </tr>
                     </thead>
+
                     <tbody class="text-gray-600 divide-y divide-gray-200 justify-self-start">
+
                         <tr v-for="(item, index) in filteredData" :key="item.id"
                             :class="{ 'bg-gray-100': index % 2 === 0 }">
 
@@ -42,7 +47,31 @@
                                     <img :src="item.sentiment" :alt="item.sentiment" />
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ item.titre }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap ">
+                                <div class="group cursor-pointer w-[90%]">
+                                    {{ item.titre }}
+                                    <div class=" hidden group-hover:block bg-[#337CCF] rounded-lg text-white p-5">
+                                        <div>
+                                            <p>Auteur : {{ item.auteur }}</p>
+                                        </div>
+                                        <div>
+                                            <p>Date de publication : {{ item.date }}</p>
+                                        </div>
+                                        <div>
+                                            <p>Résumer :</p>
+                                            <div class="mt-2 bg-[#779dc9] rounded-lg p-5 w-full whitespace-pre-line">
+                                                <p>{{ item.resume }}</p>
+                                            </div>
+
+                                        </div>
+                                        <div class="mt-5">
+                                            <a :href="item.url" class="bg-[#779dc9] p-3 rounded-lg font-bold">Voire les
+                                                details</a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </td>
                             <td class="text-center phone:text-left"> <!-- Adjust alignment for mobile -->
                                 <div class="flex justify-center items-center">
                                     {{ item.source[0].nom }}
@@ -63,19 +92,37 @@
     </div>
 </template>
 
-
-
-
 <script setup>
 import { ref, computed } from 'vue';
 import { useAPIendpointsStore } from '../store';
+import { format } from 'date-fns';
 import Navbar from '../components/Navbar.vue';
 import Calendar from '../components/Calendar.vue';
-
 const apiEndpointsStore = useAPIendpointsStore();
 const data = ref(apiEndpointsStore.data);
 
-// Tabs related logic
+function formatDateToJSONFormat(dateArray) {
+    if (dateArray && dateArray.length > 0) {
+        const startDate = dateArray[0];
+        const formattedStartDate = format(startDate, 'yyyy-MM-dd');
+
+        if (dateArray[1]) {
+            const endDate = dateArray[1];
+            const formattedEndDate = format(endDate, 'yyyy-MM-dd');
+            return [formattedStartDate, formattedEndDate];
+        } else {
+            return [formattedStartDate];
+        }
+    }
+    return null;
+}
+
+const selectedDateRange = computed(() => {
+    return formatDateToJSONFormat(apiEndpointsStore.DateCalendar);
+});
+
+const datefetch = ref(selectedDateRange);
+
 const tabItems = ["Tous", "Positif", "Négatif", "Neutre"];
 const selectedItem = ref(0);
 
@@ -83,24 +130,33 @@ function setSelectedItem(idx) {
     selectedItem.value = idx;
 }
 
-// Computed property to filter data based on selected tab
 const filteredData = computed(() => {
-    if (selectedItem.value === 1) {
-        // Filter positive items (image src: "square-caret-up-solid 1.png")
+    if (datefetch.value && datefetch.value.length > 0) {
+        const startDate = new Date(datefetch.value[0]);
+        const endDate = datefetch.value.length > 1 ? new Date(datefetch.value[1]) : null;
+
+        if (endDate) {
+            return data.value.filter(item => {
+                const itemDate = new Date(item.date);
+                return itemDate >= startDate && itemDate <= endDate;
+            });
+        } else {
+            return data.value.filter(item => {
+                const itemDate = new Date(item.date);
+                return itemDate >= startDate && itemDate <= startDate;
+            });
+        }
+    } else if (selectedItem.value === 1) {
         return data.value.filter(item => item.sentiment === "src/image/square-caret-up-solid 1.png");
     } else if (selectedItem.value === 2) {
-        // Filter negative items (image src: "Vector.png")
         return data.value.filter(item => item.sentiment === "src/image/Vector.png");
     } else if (selectedItem.value === 3) {
-        // Filter neutral items (image src: "dash.png")
         return data.value.filter(item => item.sentiment === "src/image/dash.png");
     } else {
-        // Return all items for other tabs
         return data.value;
     }
 });
 </script>
 
-<style scoped>
-/* Add your table styling here if needed */
-</style>
+
+
